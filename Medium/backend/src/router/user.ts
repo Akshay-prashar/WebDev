@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { getPrisma } from "../index";
 import bcrypt from "bcryptjs";
 import {sign} from 'hono/jwt'
-
+import { signupInput,signinInput } from "@akshay_prashar/medium-common";
 type ENV={
     DATABASE_URL:string;
     JWT_SECRET:string;
@@ -11,6 +11,11 @@ export const userRouter=new Hono<{Bindings:ENV}>()
 
 userRouter.post('/signup',async(c)=>{
   const body=await c.req.json();
+  const {success} =signupInput.safeParse(body);
+  if(!success){
+    return c.json({msg:"invalid input"},413)
+  }
+  
   const prisma=getPrisma(c)
   let hashedPassword=await bcrypt.hash(body.password,10)
   try {
@@ -37,6 +42,11 @@ userRouter.post('/signup',async(c)=>{
 
 userRouter.post('/signin',async(c)=>{
   const body=await c.req.json();
+  const {success} =signinInput.safeParse(body);
+  if(!success){
+    return c.json({msg:"invalid input"},413)
+  }
+
   const prisma=getPrisma(c)
   try {
     const IsValidUser=await prisma.user.findUnique({

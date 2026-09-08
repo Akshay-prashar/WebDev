@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { getPrisma } from "../index";
 import { verify } from "hono/jwt";
-
+import {createBlogInput,updateBlogInput} from '@akshay_prashar/medium-common'
 type Env = {
   DATABASE_URL: string;
   JWT_SECRET:string;
@@ -38,6 +38,11 @@ blogRouter.use('/*',async(c,next)=>{
 
 blogRouter.post('/',async(c)=>{
     const body=await c.req.json();
+    const {success} =createBlogInput.safeParse(body);
+    if(!success){
+        return c.json({msg:"invalid input"},413)
+    }
+
     const user=c.get("user")
     const prisma=getPrisma(c);
 
@@ -62,6 +67,10 @@ blogRouter.post('/',async(c)=>{
 
 blogRouter.put('/',async(c)=>{
     const body=await c.req.json();
+    const {success} =updateBlogInput.safeParse(body);
+    if(!success){
+        return c.json({msg:"invalid input"},413)
+    }
     const user=c.get("user")
     const prisma=getPrisma(c);
 
