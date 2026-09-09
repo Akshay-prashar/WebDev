@@ -2,8 +2,10 @@ import { Qoute } from "../components/Quote"
 import { InputForm } from "../components/InputForm"
 import {  useState, type ChangeEvent } from "react"
 import  type { SigninInput } from "@akshay_prashar/medium-common"
-
+import axios from "axios"
+import { useNavigate } from "react-router-dom"
 export const SigninComponent=function(){
+    const navigate=useNavigate()
     const [inputdata,setInputData]=useState<SigninInput>({
         email:"",
         name:"",
@@ -16,8 +18,20 @@ export const SigninComponent=function(){
             [e.target.name]:e.target.value
         }); 
     }
-    const onClickHandler=()=>{
-        
+
+    const onClickHandler=async()=>{
+        try {
+            const res=await axios.post("https://medium-backend.akshayprashar017.workers.dev/api/v1/user/signin",{
+                email:inputdata.email,
+                name:inputdata.name,
+                password:inputdata.password
+        })
+        const jwt=res.data.token
+        localStorage.setItem("token","Bearer "+jwt);
+        navigate("/blogs")
+        } catch (error) {
+            alert("Signup Failed")
+        }
     }
 
     return(

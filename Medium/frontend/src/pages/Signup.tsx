@@ -31,9 +31,7 @@ export const SignupComponent=function(){
         navigate("/blogs")
         } catch (error) {
             alert("Signup Failed")
-            console.log(error)
         }
-
     }
 
     return(
