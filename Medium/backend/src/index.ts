@@ -2,7 +2,7 @@ import { Hono,Context } from "hono";
 import { PrismaClient } from "./generated/prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import bcrypt from "bcryptjs";
-import z from 'zod'
+import { cors } from "hono/cors";
 import { userRouter } from "./router/user";
 import { blogRouter } from "./router/blog";
 
@@ -14,6 +14,7 @@ bcrypt.setRandomFallback((length) => {
 
 const app = new Hono();
 
+app.use(cors());
 app.route('/api/v1/user',userRouter)
 app.route('/api/v1/blog',blogRouter)
 
