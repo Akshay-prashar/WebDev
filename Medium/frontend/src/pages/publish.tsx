@@ -9,7 +9,7 @@ export const PublishComponent=()=>{
     const onClickHandler=async()=>{
         const token=localStorage.getItem("token");
         try {
-            await axios.post("https://medium-backend.akshayprashar017.workers.dev/api/v1/blog",{
+            const res=await axios.post("https://medium-backend.akshayprashar017.workers.dev/api/v1/blog",{
                 title:title,
                 content:content
                 },
@@ -19,7 +19,7 @@ export const PublishComponent=()=>{
                     }
                 }
             )
-            navigate('/blogs')
+            navigate(`/blog/${res.data.blog.id}`)
         } catch (error) {
          alert("Error! Try again")   
         }
