@@ -1,12 +1,12 @@
 import { BlogCard } from "../components/BlogCard"
 import { Appbar } from "../components/Appbar"
-import {useBlogHook} from "../hooks/BlogsHook"
+import {useBlogsHook} from "../hooks/BlogsHook"
 
 function LoaderComponent(){
 return(
     <div className="inline-flex" role="status" aria-label="loading">
         <svg className="animate-spin size-20 shrink-0 text-foreground" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <g stroke="currentColor" stroke-linecap="round" stroke-width="2">
+            <g stroke="currentColor" strokeLinecap="round" strokeWidth="2">
                 <path d="M12 2.75V5.25" opacity="0.15"/>
                 <path d="M16.95 4.08L15.7 6.25" opacity="0.22"/>
                 <path d="M19.92 7.05L17.75 8.3" opacity="0.32"/>
@@ -26,7 +26,7 @@ return(
 )
 }
 export const BlogsComponent=()=>{
-    const {loading,blogs}=useBlogHook()
+    const {loading,blogs}=useBlogsHook()
 
     if (loading) {
         return (
@@ -45,6 +45,7 @@ export const BlogsComponent=()=>{
                         return (
                             <BlogCard
                             key={e.id} 
+                            id={e.id}
                             title={e.title} 
                             content={e.content} 
                             authorName={e.author.name} 

@@ -9,7 +9,7 @@ type Blog = {
         name: string;
     };
 };
-export const useBlogHook=()=>{
+export const useBlogsHook=()=>{
     const [blogs,setBlogs]=useState<Blog[]>([])
     const [loading,setLoading]=useState(true)
 
