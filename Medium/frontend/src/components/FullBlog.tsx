@@ -6,7 +6,7 @@ type blog={
     publishedDate:string;
     name:string;
 }
-export const FullBlog=({id,title,content,name,publishedDate}:blog)=>{
+export const FullBlog=({title,content,name,publishedDate}:blog)=>{
     return(
         <div>
             <Appbar/>
