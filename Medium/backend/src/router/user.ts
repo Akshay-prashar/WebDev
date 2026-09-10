@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { getPrisma } from "../index";
 import bcrypt from "bcryptjs";
-import {sign} from 'hono/jwt'
+import {sign , verify} from 'hono/jwt'
 import { signupInput,signinInput } from "@akshay_prashar/medium-common";
 type ENV={
     DATABASE_URL:string;
@@ -9,6 +9,35 @@ type ENV={
 }
 export const userRouter=new Hono<{Bindings:ENV}>()
 
+userRouter.get('/me',async(c)=>{
+    const authHeaderInput=c.req.header("authorization") ||""
+    let userId=""
+    if (authHeaderInput==="") {
+      return c.json({msg:"No token avilable"},401);
+    }
+    let token=authHeaderInput.split(" ")[1]
+    try {
+      const decode=await verify(token,c.env.JWT_SECRET,"HS256")
+      userId=decode.id as string
+    } catch (error) {
+      return c.json({msg:"Error while authanticating"},403)
+    }
+    const prisma=getPrisma(c)
+    try {
+      const res= await prisma.user.findUnique({
+        where:{
+          id:userId
+        },
+        select:{
+          name:true
+        }
+      })
+      return c.json({username:res?.name})
+    } catch (error) {
+      return c.json({msg:"internal server error"})
+    }
+
+})
 userRouter.post('/signup',async(c)=>{
   const body=await c.req.json();
   const {success} =signupInput.safeParse(body);

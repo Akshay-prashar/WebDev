@@ -16,7 +16,7 @@ type Variable={
 export const blogRouter=new Hono<{Bindings:Env,Variables:Variable}>()
 
 
-blogRouter.use('/*',async(c,next)=>{
+blogRouter.use('/**',async(c,next)=>{
   const header=c.req.header("authorization") || ""
   if (header==="") {
     return c.json({msg:"No token avilable"},401);
