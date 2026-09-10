@@ -29,7 +29,6 @@ blogRouter.use('/*',async(c,next)=>{
       id:decode.id as string
     });
     await next()
-    return c.json({msg:"You are logged in"})
   } catch (error) {
     return c.json({msg:"Invalid Token"},403)
   }
