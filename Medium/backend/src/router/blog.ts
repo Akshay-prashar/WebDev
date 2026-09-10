@@ -120,17 +120,22 @@ blogRouter.get('/bulk',async(c)=>{
 })
 
 blogRouter.get('/:id',async(c)=>{
-    const blodId=c.req.param("id")
+    const blogId=c.req.param("id")
     const prisma=getPrisma(c);
     try {
         const res=await prisma.blog.findUnique({
             where:{
-                id:blodId
+                id:blogId
             },
             select:{
                 id:true,
                 title:true,
-                content:true
+                content:true,
+                author:{
+                    select:{
+                        name:true
+                    }
+                }
             }
         })
         return c.json({blog:res},200)
