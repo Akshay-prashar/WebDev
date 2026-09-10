@@ -1,5 +1,4 @@
 import { Appbar } from "./Appbar";
-import {useCurrentUser} from '../hooks/CurrentUserhook'
 type blog={
     id:string
     title:string;
@@ -8,10 +7,9 @@ type blog={
     name:string;
 }
 export const FullBlog=({id,title,content,name,publishedDate}:blog)=>{
-    const currentUser =useCurrentUser()
     return(
         <div>
-            <Appbar authorName={currentUser}/>
+            <Appbar/>
             <div className="grid grid-cols-12 p-10">
                 <div className="col-span-8">
                     <div className="text-5xl font-bold">{title}</div>

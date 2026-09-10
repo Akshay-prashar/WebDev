@@ -37,7 +37,7 @@ export const BlogsComponent=()=>{
     }
     return(
         <div>
-            <Appbar authorName="Akshay" />
+            <Appbar/>
             <div className="flex justify-center">
                 <div>
                     {
