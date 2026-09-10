@@ -101,16 +101,18 @@ blogRouter.get('/bulk',async(c)=>{
     const prisma=getPrisma(c);
     try {
         const res=await prisma.blog.findMany({
-            where:{
-                authorId:authorId
-            },
             select:{
                 id:true,
                 title:true,
-                content:true
+                content:true,
+                author:{
+                    select:{
+                        name:true
+                    }
+                }
             }
         })
-        return c.json({blogs:res,authorId},200)
+        return c.json({blogs:res},200)
     } catch (error) {
         return c.json({msg:"internal server error"},500)
     }
