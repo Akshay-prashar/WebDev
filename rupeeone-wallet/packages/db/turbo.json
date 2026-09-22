@@ -1,0 +1,8 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "outputs": ["generated/**", "index.js", "index.d.ts*"]
+    }
+  }
+}

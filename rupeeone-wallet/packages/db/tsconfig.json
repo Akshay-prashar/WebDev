@@ -1,0 +1,9 @@
+{
+  "extends": "@repo/typescript-config/base.json",
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "types": ["Node"]
+  },
+  "include": ["index.ts", "generated/**/*"],
+  "exclude": ["node_modules"]
+}
