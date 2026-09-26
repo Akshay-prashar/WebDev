@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3001",
+    "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start",
     "lint": "eslint --max-warnings 0",
@@ -14,6 +14,8 @@
     "@repo/db": "*",
     "@repo/store": "*",
     "@repo/ui": "*",
+    "@types/bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0",
     "geist": "1.7.2",
     "next": "16.3.1",
     "next-auth": "^4.24.15",
