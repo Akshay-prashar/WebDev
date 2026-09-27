@@ -2,6 +2,7 @@ import db from "@repo/db"
 import  CredentialsProvider  from "next-auth/providers/credentials"
 import bcrypt from 'bcrypt'
 
+
 export const AuthOptions={
     providers:[
         CredentialsProvider({
@@ -27,6 +28,7 @@ export const AuthOptions={
                             name:existingUser.name,
                             email:existingUser.email
                         }
+                        
                     }
                     return null
                 }
@@ -49,5 +51,12 @@ export const AuthOptions={
                 }
             },
         })
-    ]
+    ],
+    secret: process.env.JWT_SECRET || "SEcret",
+    callbacks:{
+        async session({token,session}:any){
+            session.user.id=token.sub
+            return session
+        }
+    }
 }

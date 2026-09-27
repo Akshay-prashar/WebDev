@@ -16,7 +16,7 @@ app.post("/hdfcWebhook",async(req,res)=>{
                     userId:paymentinformation.userId
                 },
                 data:{
-                    balance:{
+                    amount:{
                         increment:paymentinformation.amount
                     }
                 }
