@@ -9,6 +9,18 @@ app.post("/hdfcWebhook",async(req,res)=>{
         userId:req.body.userId,
         amount:req.body.amount
     }
+    const isvalidtoken=await db.onRampTransaction.findUnique({
+        where:{
+            token:paymentinformation.token
+        },select:{
+            status:true
+        }
+    })
+    if (isvalidtoken?.status!=="Processing") {
+        res.status(411).json({
+            message:"Invalid Request"
+        })
+    }
     try {
         await db.$transaction([
             db.balance.update({

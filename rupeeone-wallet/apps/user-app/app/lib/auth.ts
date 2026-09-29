@@ -8,17 +8,17 @@ export const AuthOptions={
         CredentialsProvider({
             name:"Credential",
             credentials:{
-                phone:{type:"text", placeholder:"1234567890", label:"Phone No.",required:true},
+                number:{type:"text", placeholder:"1234567890", label:"Phone No.",required:true},
                 email:{type:"text", placeholder:"User@Email.com", label:"email",required:true},
                 password:{type:"password", placeholder:"**********", label:"password",required:true},
             },
             async authorize(credentials:any) {
-                if (!credentials?.phone || !credentials?.password) {
+                if (!credentials?.number || !credentials?.password) {
                     return null;
                 }
-                const existingUser=await db.user.findFirst({
+                const existingUser=await db.user.findUnique({
                     where:{
-                        number:credentials.phone
+                        number:credentials.number
                     }
                 })
 
@@ -37,29 +37,7 @@ export const AuthOptions={
                     }
                     return null
                 }
-                const hashedPassword=await bcrypt.hash(credentials.password,10)
-                try {
-                    const user=await db.user.create({
-                        data:{
-                            number:credentials.phone,
-                            password:hashedPassword,
-                            email:credentials.email
-                        },
-                    })
-                    await db.balance.create({
-                        data:{
-                            userId:user.id,
-                            amount:0
-                        }
-                    })
-                    return {
-                            id:user.id.toString(),
-                            name:user.name,
-                            email:user.email
-                        }
-                } catch (error) {
-                    return null
-                }
+                return null
             },
         })
     ],
@@ -69,5 +47,8 @@ export const AuthOptions={
             session.user.id=token.sub
             return session
         }
-    }
+    },
+    pages:{
+        signIn:'/signin'
+    },
 }
