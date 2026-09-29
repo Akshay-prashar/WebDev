@@ -11,7 +11,7 @@ export default async function DashboardLayout({children}:{children:React.ReactNo
     }
     return(
         <div className="flex">
-            <div className="w-72 min-h-screen border-gray-400 border-r pt-28 bg-[#ddd9d9]">
+            <div className="w-72 min-h-[92vh] border-gray-400 border-r pt-28 bg-[#ddd9d9]">
                 <SidebarItem href="/dashboard" title="Home" icon={<HomeIcon/>}/>
                 <SidebarItem href="/transactions" title="Transaction" icon={<TransactionsIcon/>}/>
                 <SidebarItem href="/transfer" title="Transfer" icon={<TransferIcon/>}/>

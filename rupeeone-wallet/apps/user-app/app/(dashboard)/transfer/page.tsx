@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth'
 import { AuthOptions } from '../../lib/auth'
 import { AddMoneyCard } from "../../../components/AddMoneyCard"
 import { BalanceCard } from "../../../components/BalanceCard"
-import { OnRampTransaction } from "../../../components/OnRampTransaction"
+import {OnRampTransaction}  from "../../../components/OnRampTransaction"
 
 async function GetBalance() {
     const session =await getServerSession(AuthOptions)

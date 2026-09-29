@@ -22,9 +22,9 @@ export function OnRampTransaction({transactions}:{transactions:Transactions[]}){
                         <div className="text-sm">Received INR</div>
                         <div className="text-slate-600 text-sm">{t.time.toDateString()}</div>
                     </div>
-                    <div className="flex  justify-center">
-                        + Rs {t.amount/100}
-                    </div>
+                    <div className={`flex justify-center ${t.status === "Success"? "text-green-600": t.status === "Failure"? "text-red-600": "text-yellow-600"}`}>
+                        {`+ Rs ${t.amount / 100}`}
+                    </div>  
                 </div>)}
             </div>
         </Card>
