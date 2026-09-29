@@ -37,7 +37,7 @@ export default async function dashboard(){
     const balane=await GetBalance();
     const transactions =await getOnRampTransactions()
     return (
-        <div className='w-screen'>
+        <div className='w-screen bg-[#ddd9d9] pl-4'>
             <div className='text-4xl text-[#6a51a6] pt-8 mb-8 font-bold'>Transfer</div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 w-full p-4">
                 <div><AddMoneyCard/></div>

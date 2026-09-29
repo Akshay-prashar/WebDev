@@ -1,11 +1,21 @@
 import { SidebarItem } from "../../components/SideBarItem"
-export default function DashboardLayout({children}:{children:React.ReactNode}){
+
+import { getServerSession } from "next-auth"
+import { AuthOptions } from "../lib/auth"
+import { redirect } from "next/navigation"
+
+export default async function DashboardLayout({children}:{children:React.ReactNode}){
+    const session=await getServerSession(AuthOptions)
+    if (!session?.user) {
+        redirect("/api/auth/signin")
+    }
     return(
         <div className="flex">
-            <div className="w-72 min-h-screen border-slate-300 border-r mr-4 pt-28">
+            <div className="w-72 min-h-screen border-gray-400 border-r pt-28 bg-[#ddd9d9]">
                 <SidebarItem href="/dashboard" title="Home" icon={<HomeIcon/>}/>
                 <SidebarItem href="/transactions" title="Transaction" icon={<TransactionsIcon/>}/>
                 <SidebarItem href="/transfer" title="Transfer" icon={<TransferIcon/>}/>
+                <SidebarItem href="/P2Ptransfer" title="P2P Transfer" icon={<P2PTransferIcon/>}/>
             </div>
             {children}
         </div>
@@ -28,5 +38,9 @@ function TransactionsIcon() {
     return <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
   </svg>
-  
+}
+function P2PTransferIcon() {
+  return <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+  </svg>
 }

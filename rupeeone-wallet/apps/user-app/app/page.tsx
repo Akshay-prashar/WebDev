@@ -3,9 +3,9 @@ import { AuthOptions } from "./lib/auth"
 import { redirect } from "next/navigation"
 export default async function Page(){
   const session=await getServerSession(AuthOptions)
-  if (!session?.user) {
+  if (session?.user) {
     redirect("/dashboard")
   }else{
-    redirect("api/auth/signin")
+    redirect("/api/auth/signin")
   }
 }
