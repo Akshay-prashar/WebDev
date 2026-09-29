@@ -1,4 +1,4 @@
-import SendMoney from "../../../components/SendMoney";
+import SendMoney from "../../../components/P2PSendMoney";
 import { P2PTransactions } from "../../../components/p2pTransactions";
 export default function P2Ptransfer(){
     return(

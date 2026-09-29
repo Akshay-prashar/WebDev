@@ -16,7 +16,6 @@ export async function p2pTransfer(number:string,amount:number) {
         }
     }
     const fromUserId=session.user.id
-    const fromUser=session.user.name
     const toUser=await db.user.findFirst({
         where:{
             number:number
@@ -28,7 +27,7 @@ export async function p2pTransfer(number:string,amount:number) {
         }
     };
 
-    if (fromUserId===toUser.id) {
+    if (fromUserId===Number(toUser.id)) {
         return{
             message:"Cannot transfer to yourself"
         }
