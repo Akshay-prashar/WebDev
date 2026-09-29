@@ -20,6 +20,8 @@ model User {
   password String
   balance Balance[]
   OnRampTransaction OnRampTransaction[]
+  sentTransfers p2pTransfer[] @relation(name: "FromUserRelation")
+  receivedTransfers p2pTransfer[] @relation(name: "ToUserRelation")
 }
 
 model Merchant{
@@ -46,6 +48,16 @@ model OnRampTransaction{
   startTime DateTime
   userId Int
   user User @relation(fields: [userId],references: [id])
+}
+
+model p2pTransfer {
+  id Int @id @default(autoincrement())
+  amount Int
+  timestamp DateTime
+  fromUserId Int
+  fromUser User @relation(fields: [fromUserId],references: [id],name: "FromUserRelation")
+  toUserId Int
+  toUser User @relation(fields: [toUserId],references: [id],name: "ToUserRelation")
 }
 enum AuthType{
   Google
