@@ -9,45 +9,54 @@ app.post("/hdfcWebhook",async(req,res)=>{
         userId:req.body.userId,
         amount:req.body.amount
     }
-    const isvalidtoken=await db.onRampTransaction.findUnique({
-        where:{
-            token:paymentinformation.token
-        },select:{
-            status:true
-        }
-    })
-    if (isvalidtoken?.status!=="Processing") {
-        res.status(411).json({
-            message:"Invalid Request"
-        })
-    }
     try {
-        await db.$transaction([
-            db.balance.update({
+        await db.$transaction(async(tx)=>{
+            const transactions= await tx.$queryRaw<{id:number,amount:number,userId:number,status:string}[]>`
+            SELECT "id,userId,amount,status" 
+            FROM "onRampTransaction" 
+            WHERE "token"=${paymentinformation.token} 
+            FOR UPDATE;`
+            const transaction=transactions[0];
+
+            if (!transaction) {
+                throw new Error("Transaction not found")
+            }
+            if (transaction.status!=="Processing") {
+                throw new Error("Transaction already processed");
+            }
+            if (transaction.userId!==paymentinformation.userId || transaction.amount!==paymentinformation.amount) {
+                throw new Error("Invalid payment information");
+            }
+
+            await tx.balance.update({
                 where:{
-                    userId:paymentinformation.userId
+                    userId:transaction.userId,
                 },
                 data:{
                     amount:{
-                        increment:paymentinformation.amount
+                        increment:transaction.amount
                     }
                 }
-            }),
-            db.onRampTransaction.update({
+            });
+            await tx.onRampTransaction.update({
                 where:{
-                    token:paymentinformation.token
+                    id:transaction.id
                 },
                 data:{
                     status:"Success"
                 }
-            })
-        ],{maxWait:10000,timeout:20000})
-        res.status(200).json({msg:"Captured"})
-    } catch (error) {
-        console.log(error)
-        res.status(411).json({msg:"Failded"})
-        
+            });
+        },{maxWait:10000,timeout:20000});
+
+        return res.status(200).json({
+            message: "Captured",
+        });
+    }catch(error){
+        console.log(error);
+        return res.status(400).json({
+            message:"Failed"
+        })
     }
-})
+});
 
 app.listen(3001)
