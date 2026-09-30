@@ -1,6 +1,6 @@
 # RupeeOne Wallet 💸
 
-A full-stack, enterprise-grade digital wallet and peer-to-peer (P2P) payment platform built as a high-performance **Turborepo monorepo**. The platform enables users to securely add money via simulated netbanking, transfer funds directly between phone numbers in real-time, view transaction histories, and manage balances with strict atomicity and concurrency control.
+A full-stack,digital wallet and peer-to-peer (P2P) payment platform built With **Turborepo monorepo**. The platform enables users to securely add money via simulated netbanking, transfer funds directly between phone numbers , view transaction histories, and manage balances with strict atomicity and concurrency control.
 
 ---
 
@@ -133,7 +133,7 @@ rupeeone-wallet/
 |---|---|
 | **Frameworks** | Next.js 16.3.1 (React 19, Turbopack, App Router), Express.js 5.x |
 | **Monorepo Tools** | Turborepo 2.x, npm workspaces |
-| **Languages** | TypeScript 5.x / 7.x, Node.js (>=24) |
+| **Languages** |  7.x, Node.js (>=24) |
 | **Database & ORM** | PostgreSQL, Prisma 7.10.0, `@prisma/adapter-pg`, `pg` |
 | **Authentication** | NextAuth.js v4 (Credentials Provider with JWT sessions), bcrypt |
 | **State Management** | Redux Toolkit (`@reduxjs/toolkit` v2), `react-redux` v9 |
@@ -296,7 +296,7 @@ All mutations are implemented using secure Next.js Server Actions located in [`a
     provider: z.string().min(1)
   })
   ```
-- **Flow**: Verifies user session, generates a unique transaction token, and inserts an `OnRampTransaction` record with status `"Processing"` (amount multiplied by 100 to convert INR to paise).
+- **Flow**: Verifies user session, generates a Random transaction token, and inserts an `OnRampTransaction` record with status `"Processing"` (amount multiplied by 100 to convert INR to paise).
 
 #### `p2pTransfer(number, amount)`
 - **File**: `apps/user-app/app/lib/actions/p2pTransfer.ts`
