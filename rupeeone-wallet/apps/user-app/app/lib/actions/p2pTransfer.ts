@@ -2,17 +2,27 @@
 import { getServerSession } from "next-auth"
 import { AuthOptions } from "../auth"
 import db from '@repo/db'
-
+import z from 'zod'
+const p2pTransferSchema=z.object({
+    number:z.number(),
+    amount:z.number(),
+})
 export async function p2pTransfer(number:string,amount:number) {
     const session=await getServerSession(AuthOptions);
     if (!session?.user?.id) {
         return{
+            success:false,
             message:"User not LogedIn"
         }
     }  
-    if(amount<=0){
+    const isInputValid= p2pTransferSchema.safeParse({
+        amount,
+        number
+    })
+    if (!isInputValid.success || amount<=0) {
         return{
-            message:"Invalid Amount"
+            success:false,
+            message:"Invalid Input"
         }
     }
     const fromUserId=session.user.id
