@@ -4,7 +4,7 @@ import { AuthOptions } from "../auth"
 import db from '@repo/db'
 import z from 'zod'
 const p2pTransferSchema=z.object({
-    number:z.number(),
+    number:z.string(),
     amount:z.number(),
 })
 export async function p2pTransfer(number:string,amount:number) {
