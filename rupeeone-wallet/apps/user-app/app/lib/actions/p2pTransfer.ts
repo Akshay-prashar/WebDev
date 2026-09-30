@@ -2,9 +2,9 @@
 import { getServerSession } from "next-auth"
 import { AuthOptions } from "../auth"
 import db from '@repo/db'
-import z from 'zod'
+import z, { success } from 'zod'
 const p2pTransferSchema=z.object({
-    number:z.string(),
+    number:z.string().regex(/^[6-9]\d{9}$/),
     amount:z.number(),
 })
 export async function p2pTransfer(number:string,amount:number) {
@@ -33,12 +33,14 @@ export async function p2pTransfer(number:string,amount:number) {
     });
     if (!toUser) {
         return{
+            success:false,
             message:"User not Found"
         }
     };
 
     if (fromUserId===Number(toUser.id)) {
         return{
+            success:false,
             message:"Cannot transfer to yourself"
         }
     }

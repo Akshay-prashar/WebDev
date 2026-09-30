@@ -9,13 +9,13 @@ export default function SignupComponent(){
     const [email,setEmail]=useState("");
     const [name,setName]=useState("");
     const [password,setPassword]=useState("");
-    const [loginSuccess,setLoginSuccess]=useState(true);
+    const [signupSuccess,setSignupSuccess]=useState(true);
     const router=useRouter()
     return(
         <div className="w-full flex justify-center items-center h-[92vh] bg-[#ddd9d9]">
             <div className="w-95">
                 <Card title="Signup">
-                    {loginSuccess==false?<div className="text-red-600">Login Failed! Tru Again</div>:<div></div>}
+                    {signupSuccess==false?<div className="text-red-600">Signup Failed! Tru Again</div>:<div></div>}
                     <TextInput lable="Number" placeholder="1234567890" onChange={(value)=>{setNumber(value)}}/>
                     <TextInput lable="Name" placeholder="John Doe" onChange={(value)=>{setName(value)}}/>
                     <TextInput lable="Email" placeholder="JohnDoe@email.com" onChange={(value)=>{setEmail(value)}}/>
@@ -26,7 +26,7 @@ export default function SignupComponent(){
                                 if (res.success) {
                                     router.push('/signin')
                                 }else{
-                                    setLoginSuccess(false)
+                                    setSignupSuccess(false)
                                 }
                             }}>SignUp</Button>
                         </div>

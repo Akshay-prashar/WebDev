@@ -26,8 +26,10 @@ export function AddMoneyCard(){
                 options={SUPPORTED_BANK.map(x=>({key:x.name,value:x.name}))}/>
                 <div className="flex justify-center pt-4">
                     <Button onClick={async()=>{
-                        await createOnRampTransaction(Number(amount),provider)
-                        window.location.href=redirectUrl||""}
+                        let res=await createOnRampTransaction(Number(amount),provider)
+                        if (res.success) {
+                            window.location.href=redirectUrl||""}
+                        }
                         }>
                         Add Money
                     </Button>

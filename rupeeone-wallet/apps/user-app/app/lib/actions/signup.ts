@@ -11,7 +11,7 @@ interface Signupprops{
 const signupSchema=z.object({
     name:z.string(),
     email:z.email(),
-    number:z.string().min(10),
+    number:z.string().regex(/^[6-9]\d{9}$/),
     password:z.string()
 })
 export default async function SignupAction(InputData:Signupprops){
