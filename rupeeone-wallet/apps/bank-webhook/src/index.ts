@@ -12,7 +12,7 @@ app.post("/hdfcWebhook",async(req,res)=>{
     try {
         await db.$transaction(async(tx)=>{
             const transactions= await tx.$queryRaw<{id:number,amount:number,userId:number,status:string}[]>`
-            SELECT "id,userId,amount,status" 
+            SELECT "id","userId","amount","status" 
             FROM "onRampTransaction" 
             WHERE "token"=${paymentinformation.token} 
             FOR UPDATE;`
@@ -24,7 +24,7 @@ app.post("/hdfcWebhook",async(req,res)=>{
             if (transaction.status!=="Processing") {
                 throw new Error("Transaction already processed");
             }
-            if (transaction.userId!==paymentinformation.userId || transaction.amount!==paymentinformation.amount) {
+            if (transaction.userId!==Number(paymentinformation.userId) || transaction.amount!==Number(paymentinformation.amount)) {
                 throw new Error("Invalid payment information");
             }
 
