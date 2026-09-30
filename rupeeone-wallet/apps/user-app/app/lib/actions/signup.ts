@@ -15,32 +15,36 @@ export default async function SignupAction(InputData:Signupprops){
     });
     if(existingUser){
         return{
+            success: false,
             message:"Alredy Registered try Login"
         }
     }
     
     const hashedPassword=await bcrypt.hash(InputData.password,10)
     try {
-        const user=await db.user.create({
-            data:{
+        await db.$transaction(async(tx)=>{
+            const user=await tx.user.create({
+                data:{
                 name:InputData.name,
                 email:InputData.email,
                 password:hashedPassword,
                 number:InputData.number
-            }
+                }
+            });
+            await tx.balance.create({
+                data:{
+                    userId:user.id,
+                    amount:0
+                }
+            });
         })
-        await db.balance.create({
-            data:{
-                userId:user.id,
-                amount:0
-            }
-        });
-
         return {
+            success: true,
             message:"Signup SucessFull"
         }
     } catch (error) {
         return {
+            success: false,
             message:"Error Occured! Try Again"
         }
     }
