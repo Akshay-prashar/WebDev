@@ -2,6 +2,7 @@ import db from "@repo/db"
 import  CredentialsProvider  from "next-auth/providers/credentials"
 import bcrypt from 'bcrypt'
 
+type CredentialPropsStructure=Record<string,string>
 
 export const AuthOptions={
     providers:[
@@ -12,7 +13,8 @@ export const AuthOptions={
                 email:{type:"text", placeholder:"User@Email.com", label:"email",required:true},
                 password:{type:"password", placeholder:"**********", label:"password",required:true},
             },
-            async authorize(credentials:any) {
+            
+            async authorize(credentials,req) {
                 if (!credentials?.number || !credentials?.password) {
                     return null;
                 }
@@ -41,7 +43,7 @@ export const AuthOptions={
             },
         })
     ],
-    secret: process.env.JWT_SECRET || "SEcret",
+    secret: process.env.JWT_SECRET,
     callbacks:{
         async session({token,session}:any){
             session.user.id=token.sub
