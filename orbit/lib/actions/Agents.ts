@@ -1,7 +1,7 @@
 "use server"
 import { prisma } from '@/lib/db/index'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../auth/auth'
+import { authOptions } from '@/lib/auth/auth'
 import { createAgentInputProps, createAgentInputPropsSchema } from '@/types/agents'
 import { getAgentInputProp,getAgentInputPropSchema } from '@/types/agents'
 import {updateAgentInputprops,updateAgentInputpropsSchema} from '@/types/agents'
