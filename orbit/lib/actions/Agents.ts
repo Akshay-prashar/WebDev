@@ -8,17 +8,17 @@ import {updateAgentInputprops,updateAgentInputpropsSchema} from '@/types/agents'
 import { deleteAgentInputProp,deleteAgentInputPropSchema } from '@/types/agents'
 export async function createAgent({name,description,instructions,avatar}:createAgentInputProps){
     const session=await getServerSession(authOptions)
+    if (!session?.user?.id) {
+        return{
+            success:false,
+            message:"Invalid User"
+        }
+    }
     const isValidinput=createAgentInputPropsSchema.safeParse({name,description,instructions,avatar})
     if (!isValidinput.success) {
         return{
             success:false,
             message:"Invalid Input"
-        }
-    }
-    if (!session?.user?.id) {
-        return{
-            success:false,
-            message:"Invalid User"
         }
     }
     try {
@@ -87,17 +87,17 @@ export async function getAgents() {
 
 export async function getAgent({agentId}:getAgentInputProp) {
     const session=await getServerSession(authOptions)
+    if (!session?.user?.id) {
+        return{
+            success:false,
+            message:"Invalid User"
+        }
+    }
     const isValidinput=getAgentInputPropSchema.safeParse({agentId})
     if (!isValidinput.success) {
         return{
             success:false,
             message:"Invalid Input"
-        }
-    }
-    if (!session?.user?.id) {
-        return{
-            success:false,
-            message:"Invalid User"
         }
     }
     try {
@@ -127,6 +127,12 @@ export async function getAgent({agentId}:getAgentInputProp) {
 
 export async function updateAgent({agentId,name,description,instructions,avatar}:updateAgentInputprops) {
     const session=await getServerSession(authOptions)
+    if (!session?.user?.id) {
+        return{
+            success:false,
+            message:"Invalid User"
+        }
+    } 
     const isValidinput=updateAgentInputpropsSchema.safeParse({agentId,name,description,instructions,avatar})
     if (!isValidinput.success) {
         return{
@@ -134,12 +140,6 @@ export async function updateAgent({agentId,name,description,instructions,avatar}
             message:"Invalid Input"
         }
     }
-    if (!session?.user?.id) {
-        return{
-            success:false,
-            message:"Invalid User"
-        }
-    } 
     try {
         const isValidReq=await prisma.agent.findFirst({
             where:{
@@ -179,6 +179,12 @@ export async function updateAgent({agentId,name,description,instructions,avatar}
 
 export async function deleteAgent({agentId}:deleteAgentInputProp) {
     const session=await getServerSession(authOptions)
+    if (!session?.user?.id) {
+        return{
+            success:false,
+            message:"Invalid User"
+        }
+    };
     const isValidinput=deleteAgentInputPropSchema.safeParse({agentId})
     if (!isValidinput.success) {
         return{
@@ -186,12 +192,6 @@ export async function deleteAgent({agentId}:deleteAgentInputProp) {
             message:"Invalid Input"
         }
     }
-    if (!session?.user?.id) {
-        return{
-            success:false,
-            message:"Invalid User"
-        }
-    };
     try {
         const isValidReq=await prisma.agent.findFirst({
             where:{

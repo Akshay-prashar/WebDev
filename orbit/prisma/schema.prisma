@@ -12,8 +12,6 @@ datasource db {
   provider = "postgresql"
 }
 
-
-
 // ==============================
 // ENUMS
 // ==============================
@@ -45,7 +43,6 @@ enum RoutineFrequency {
   MONTHLY
 }
 
-
 // ==============================
 // USER
 // ==============================
@@ -62,7 +59,6 @@ model User {
   toolConnections ToolConnection[]
   routines        Routine[]
 }
-
 
 // ==============================
 // AGENT
@@ -86,7 +82,6 @@ model Agent {
   @@index([userId])
 }
 
-
 // ==============================
 // TOOL
 // ==============================
@@ -102,7 +97,6 @@ model Tool {
   toolConnections ToolConnection[]
   agentTools      AgentTool[]
 }
-
 
 // ==============================
 // TOOL CONNECTION
@@ -123,18 +117,16 @@ model ToolConnection {
   // One user can have only one connection
   // for a particular tool.
   @@unique([userId, toolId])
-
   @@index([userId])
   @@index([toolId])
 }
-
 
 // ==============================
 // ROUTINE
 // ==============================
 
 model Routine {
-  id           String          @id @default(cuid())
+  id           String           @id @default(cuid())
   userId       String
   agentId      String
   goal         String
@@ -142,20 +134,19 @@ model Routine {
   frequency    RoutineFrequency
   scheduleTime String
   timezone     String
-  isActive     Boolean         @default(true)
+  isActive     Boolean          @default(true)
   nextRun      DateTime?
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
 
-  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  agent      Agent             @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agent      Agent              @relation(fields: [agentId], references: [id], onDelete: Cascade)
   executions RoutineExecution[]
 
   @@index([userId])
   @@index([agentId])
   @@index([isActive, nextRun])
 }
-
 
 // ==============================
 // CONVERSATION
@@ -165,6 +156,7 @@ model Conversation {
   id        String   @id @default(cuid())
   userId    String
   agentId   String
+  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -177,23 +169,22 @@ model Conversation {
   @@index([userId, agentId])
 }
 
-
 // ==============================
 // CHAT MESSAGE
 // ==============================
 
 model ChatMessage {
-  id             String      @id @default(cuid())
+  id             String       @id @default(cuid())
   conversationId String
   role           MessageRole
   content        String
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  conversation Conversation @relation(fields: [conversationId],references: [id],onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
   @@index([conversationId])
   @@index([conversationId, createdAt])
 }
-
 
 // ==============================
 // ROUTINE EXECUTION
@@ -208,12 +199,12 @@ model RoutineExecution {
   startedAt   DateTime
   completedAt DateTime?
   updatedAt   DateTime               @updatedAt
-  routine Routine @relation(fields: [routineId],references: [id],onDelete: Cascade)
+  routine     Routine                @relation(fields: [routineId], references: [id], onDelete: Cascade)
+
   @@index([routineId])
   @@index([routineId, startedAt])
   @@index([status])
 }
-
 
 // ==============================
 // AGENT TOOL
@@ -226,8 +217,8 @@ model AgentTool {
   configuration Json?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  agent Agent @relation(fields: [agentId],references: [id],onDelete: Cascade)
-  tool Tool @relation(fields: [toolId],references: [id],onDelete: Cascade)
+  agent         Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  tool          Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
 
   // An agent cannot use the same tool twice.
   @@unique([agentId, toolId])
