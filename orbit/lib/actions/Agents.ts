@@ -70,6 +70,9 @@ export async function getAgents() {
         const res=await prisma.agent.findMany({
             where:{
                 userId:session.user.id
+            },
+            orderBy:{
+                createdAt: "desc"
             }
         });
         return{
