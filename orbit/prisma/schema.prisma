@@ -12,10 +12,225 @@ datasource db {
   provider = "postgresql"
 }
 
-model User{
-  id Int @id @default(autoincrement())
-  name String
-  email String @unique
-  updatedAt DateTime
+
+
+// ==============================
+// ENUMS
+// ==============================
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  TOOL
+}
+
+enum ToolConnectionStatus {
+  ACTIVE
+  INACTIVE
+  ERROR
+}
+
+enum RoutineExecutionStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum RoutineFrequency {
+  ONCE
+  HOURLY
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+
+// ==============================
+// USER
+// ==============================
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
+
+  agents          Agent[]
+  conversations   Conversation[]
+  toolConnections ToolConnection[]
+  routines        Routine[]
+}
+
+
+// ==============================
+// AGENT
+// ==============================
+
+model Agent {
+  id           String   @id @default(cuid())
+  userId       String
+  name         String
+  description  String?
+  instructions String?
+  avatar       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agentTools    AgentTool[]
+  routines      Routine[]
+  conversations Conversation[]
+
+  @@index([userId])
+}
+
+
+// ==============================
+// TOOL
+// ==============================
+
+model Tool {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  key         String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  toolConnections ToolConnection[]
+  agentTools      AgentTool[]
+}
+
+
+// ==============================
+// TOOL CONNECTION
+// ==============================
+
+model ToolConnection {
+  id             String               @id @default(cuid())
+  userId         String
+  toolId         String
+  connectionData Json
+  status         ToolConnectionStatus @default(ACTIVE)
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool Tool @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  // One user can have only one connection
+  // for a particular tool.
+  @@unique([userId, toolId])
+
+  @@index([userId])
+  @@index([toolId])
+}
+
+
+// ==============================
+// ROUTINE
+// ==============================
+
+model Routine {
+  id           String          @id @default(cuid())
+  userId       String
+  agentId      String
+  goal         String
+  instruction  String
+  frequency    RoutineFrequency
+  scheduleTime String
+  timezone     String
+  isActive     Boolean         @default(true)
+  nextRun      DateTime?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agent      Agent             @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  executions RoutineExecution[]
+
+  @@index([userId])
+  @@index([agentId])
+  @@index([isActive, nextRun])
+}
+
+
+// ==============================
+// CONVERSATION
+// ==============================
+
+model Conversation {
+  id        String   @id @default(cuid())
+  userId    String
+  agentId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agent    Agent         @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  messages ChatMessage[]
+
+  @@index([userId])
+  @@index([agentId])
+  @@index([userId, agentId])
+}
+
+
+// ==============================
+// CHAT MESSAGE
+// ==============================
+
+model ChatMessage {
+  id             String      @id @default(cuid())
+  conversationId String
+  role           MessageRole
+  content        String
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  conversation Conversation @relation(fields: [conversationId],references: [id],onDelete: Cascade)
+  @@index([conversationId])
+  @@index([conversationId, createdAt])
+}
+
+
+// ==============================
+// ROUTINE EXECUTION
+// ==============================
+
+model RoutineExecution {
+  id          String                 @id @default(cuid())
+  routineId   String
+  status      RoutineExecutionStatus @default(PENDING)
+  result      String?
+  error       String?
+  startedAt   DateTime
+  completedAt DateTime?
+  updatedAt   DateTime               @updatedAt
+  routine Routine @relation(fields: [routineId],references: [id],onDelete: Cascade)
+  @@index([routineId])
+  @@index([routineId, startedAt])
+  @@index([status])
+}
+
+
+// ==============================
+// AGENT TOOL
+// ==============================
+
+model AgentTool {
+  id            String   @id @default(cuid())
+  agentId       String
+  toolId        String
+  configuration Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  agent Agent @relation(fields: [agentId],references: [id],onDelete: Cascade)
+  tool Tool @relation(fields: [toolId],references: [id],onDelete: Cascade)
+
+  // An agent cannot use the same tool twice.
+  @@unique([agentId, toolId])
+  @@index([agentId])
+  @@index([toolId])
 }

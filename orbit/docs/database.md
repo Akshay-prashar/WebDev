@@ -13,7 +13,6 @@ User
         User 1:N Conversation
         User 1:N ToolConnection
         User 1:N Routine
-        User 1:N RoutineExecution
 
 Agent
 
